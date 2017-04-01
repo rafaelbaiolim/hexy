@@ -1,34 +1,69 @@
 from ..comm.pwm import PWM
-from time import sleep
-
-""" joint_key convention:
-    R - right, L - left
-    F - front, M - middle, B - back
-    H - hip, K - knee, A - Ankle
-    key : (channel, minimum_pulse_length, maximum_pulse_length) """
-
-joint_properties = {
-
-    'LFH': (0, 248, 398), 'LFK': (1, 188, 476), 'LFA': (2, 131, 600),
-    'RFH': (3, 275, 425), 'RFK': (4, 227, 507), 'RFA': (5, 160, 625),
-    'LMH': (6, 312, 457), 'LMK': (7, 251, 531), 'LMA': (8, 138, 598),
-    'RMH': (9, 240, 390), 'RMK': (10, 230, 514), 'RMA': (11, 150, 620),
-    'LBH': (12, 315, 465), 'LBK': (13, 166, 466), 'LBA': (14, 140, 620),
-    'RBH': (15, 320, 480), 'RBK': (16, 209, 499), 'RBA': (17, 150, 676),
-    'N': (18, 150, 650)
-}
-
-driver1 = PWM(0x40)
-driver2 = PWM(0x41)
-
-driver1.setPWMFreq(60)
-driver2.setPWMFreq(60)
+from ..config import Config
+from time import sleep, time
 
 
-def drive(ch, val):
-    driver = driver1 if ch < 16 else driver2
-    ch = ch if ch < 16 else ch - 16    
-    driver.setPWM(ch, 0, val)
+class Driver(object):
+    def __init__(self, throttle=0.0, max_load=18):
+        """
+        Create a global driver object.
+        """
+        self.throttle = throttle
+        self.max_load = max_load
+
+        self.freq = 0.50
+
+        self.config = Config()
+        self.drivers = [PWM(int(addr.split('x')[-1], 16))
+                        for addr in self.config['controllers']]
+
+        for driver in self.drivers:
+            driver.setPWMFreq(int(self.freq*60))
+
+        self.joint_conf = dict(self.config.items())
+        self.last_cmd = {}
+        self.idle()
+
+    def num_in_motion(self, since, excluding):
+        """
+        return the number of servos in motion since the given time,
+        excluding the excluded servo.
+        
+        args:
+            since: time period in seconds
+        """
+        now = time()
+        return len([t for t in self.last_cmd.values()
+                     if (now - t) <= since])
+
+
+    def drive(self, joint, val):
+        joint_name = 'addr_' + joint.lower()
+        controller, channel, pwm_min, pwm_max = self.joint_conf[joint_name]
+        driver = self.drivers[controller]
+        
+        while (val > 0 and
+                self.num_in_motion(self.throttle, joint) > self.max_load):
+            # Avoid putting too much load on the servos at once by
+            # throttling the commands we send
+            sleep(self.throttle / 10.0)
+            
+        driver.setPWM(channel, 0, int(self.freq*val))
+        self.last_cmd[joint] = time()
+
+
+    def idle(self):
+        for joint in self.joint_conf:
+            if joint.startswith('addr_'):
+                self.drive(joint.split('_')[-1], 0)
+
+
+_driver = None
+def get_driver():
+    global _driver
+    if _driver is None:
+        _driver = Driver()
+    return _driver
 
 
 def constrain(val, min_val, max_val):
@@ -43,8 +78,16 @@ def remap(old_val, (old_min, old_max), (new_min, new_max)):
 class HexapodCore:
 
     def __init__(self):
+        """
+        joint_key convention:
+            R - right, L - left
+            F - front, M - middle, B - back
+            H - hip, K - knee, A - Ankle
+            key : (controller, channel, minimum_pulse_length, maximum_pulse_length)
+        """
 
-        self.neck = Joint("neck", 'N')
+
+        self.neck = Joint("neck", 'head')
 
         self.left_front = Leg('left front', 'LFH', 'LFK', 'LFA')
         self.right_front = Leg('right front', 'RFH', 'RFK', 'RFA')
@@ -129,7 +172,8 @@ class Joint:
     def __init__(self, joint_type, jkey, maxx = 90, leeway = 0):
 
         self.joint_type, self.name =  joint_type, jkey
-        self.channel, self.min_pulse, self.max_pulse = joint_properties[jkey]
+        joint_addr = 'addr_' + jkey.lower()
+        _, _, self.min_pulse, self.max_pulse = get_driver().config[joint_addr]
         self.max, self.leeway = maxx, leeway
 
         self.off()
@@ -139,13 +183,13 @@ class Joint:
         angle = constrain(angle, -(self.max + self.leeway), self.max + self.leeway)
         pulse = remap(angle, (-self.max, self.max), (self.min_pulse, self.max_pulse))
 
-        drive(self.channel, pulse)
+        get_driver().drive(self.name, pulse)
         self.angle = angle
         
         #print repr(self), ':', 'pulse', pulse
 
     def off(self):
-        drive(self.channel, 0)
+        get_driver().drive(self.name, 0)
         self.angle = None
 
     def __repr__(self):
