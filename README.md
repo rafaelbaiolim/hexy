@@ -3,9 +3,8 @@ Arcbotics hexapod robot frame with Raspberry Pi Zero and Adafruit 16 channel I2C
 - [Hexy Documentation](http://hexyrobot.wordpress.com)
 - [Hexy Transcript](https://medium.com/@mithi/a-raspberry-pi-hexy-transcript-62533c69a566)
 
-```
-HexapodCore > Hexapod > HexapodPro > DancingHexapod
-```
+Quickstart
+----------
  
 The easiest way to get this up and running, on your raspberry pi zero is to do the following on the terminal via ssh.
 
@@ -17,6 +16,11 @@ $ sudo python setup.py install
 $ python -m hexy.demo.demo1
 $ python -m hexy.demo.demo2
 $ python -m hexy.demo.demo3
+```
+
+Class Hierarchy:
+```
+HexapodCore > Hexapod > HexapodPro > DancingHexapod
 ```
 
 Sample usage when running python interpreter from anywhere in your system... 
@@ -61,3 +65,32 @@ And this :)
 >>> hexy.lie_down()
 >>> hexy.curl_up(die = True)
 ```
+
+
+Configuration & Calibration
+---------------------------
+You may have your servo controllers on different addresses,
+or your servos plugged into different ports. You will also
+have to calibrate the min and max range of each of your
+servos, since these settings vary from servo to servo.
+
+These settings are all stored in the hexy.cfg file. To help
+with this task, there is a GUI program scripts/detect_controllers.py.
+
+To use this program:
+ 1. First, edit the "controllers" line in hexy.cfg to contain
+    the addresses of your controllers. i2cdetect on the command
+    line can help you learn what to put here. See https://learn.adafruit.com/adafruit-16-channel-servo-driver-with-raspberry-pi/configuring-your-pi-for-i2c
+    for tips on how to do this.
+ 2. Next, run "python scripts/detect_controllers.py" from the top
+    level hexy directory. This will pop up a GUI, so you need
+    to have a VNC session open to your raspberry pi for this to
+    work.
+ 3. Within the gui, go one-by-one for each joint and make sure
+    it is assigned to the correct controller and port. You can
+    use "test min," "test center," "test max" both to make sure
+    you are using the correct controller/port, and also to
+    calibrate the minimum and maximum setting for each servo.
+    Make sure you click "save" after you are done with each joint.
+    This will save the settings back to the hexy.cfg file.
+    
