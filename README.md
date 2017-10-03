@@ -65,10 +65,26 @@ And this :)
 >>> hexy.lie_down()
 >>> hexy.curl_up(die = True)
 ```
+Configuration & Calibration V2
+------------------------------
+For use V2 of config. & calibration tool,
+do as description V1. Execute GUI V2 using: 
+```
+python scripts/v1/detect_controllers.py
+```
+The configs. will be applied to current 
+selected radio box on RIGHT,LEFT and HEAD area, 
+each area has one Controller and Channel.
 
+> VNC session will need to be setted with a resolution 
+of  at least 1024x768, increase GPU memory 
+for better process result too. 
+Use Raspberry Pi doc. to apply appropried value 
 
-Configuration & Calibration
----------------------------
+![alt text](https://raw.githubusercontent.com/rafaelbaiolim/hexy/config/scripts/v2/screen/servo-tester_v2.png)
+
+Configuration & Calibration V1
+------------------------------
 You may have your servo controllers on different addresses,
 or your servos plugged into different ports. You will also
 have to calibrate the min and max range of each of your
@@ -82,7 +98,7 @@ To use this program:
     the addresses of your controllers. i2cdetect on the command
     line can help you learn what to put here. See https://learn.adafruit.com/adafruit-16-channel-servo-driver-with-raspberry-pi/configuring-your-pi-for-i2c
     for tips on how to do this.
- 2. Next, run "python scripts/detect_controllers.py" from the top
+ 2. Next, run "python scripts/v1/detect_controllers.py" from the top
     level hexy directory. This will pop up a GUI, so you need
     to have a VNC session open to your raspberry pi for this to
     work.
