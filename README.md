@@ -70,7 +70,7 @@ Configuration & Calibration V2
 For use V2 of config. & calibration tool,
 do as description V1. Execute GUI V2 using: 
 ```
-python scripts/v1/detect_controllers.py
+python scripts/v2/detect_controllers.py
 ```
 The configs. will be applied to current 
 selected radio box on RIGHT, LEFT and HEAD area, 
