@@ -73,7 +73,7 @@ do as description V1. Execute GUI V2 using:
 python scripts/v1/detect_controllers.py
 ```
 The configs. will be applied to current 
-selected radio box on RIGHT,LEFT and HEAD area, 
+selected radio box on RIGHT, LEFT and HEAD area, 
 each area has one Controller and Channel.
 
 > VNC session will need to be setted with a resolution 
