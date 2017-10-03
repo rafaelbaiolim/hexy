@@ -107,7 +107,7 @@ class MainWindow(wx.Frame):
         for channelStr in self.servo_list:
                 if(channelStr.startswith('addr_r')):
                         self.checkbox_r.append(channelStr)
-                elif(channelStr.startswith('addr_l')):     		
+                elif(channelStr.startswith('addr_l')):          
                         self.checkbox_l.append(channelStr)
                 else:
                         self.checkbox_h.append(channelStr)
@@ -234,7 +234,7 @@ class MainWindow(wx.Frame):
         self.Bind(wx.EVT_SCROLL, self.on_min_change, self.min_left_slider)
         self.Bind(wx.EVT_SCROLL, self.on_max_change, self.max_left_slider)
 
- 	   # Test Buttons LEFT
+       # Test Buttons LEFT
         self.test_min = wx.Button(self, pos=(x_offset, y_offset), size=(60, 25), id=self.BTL_MIN,
                                   label='Min')
         self.test_center = wx.Button(self, pos=(x_offset+70, y_offset), size=(70, 25),id=self.BTL_CENTER,
@@ -374,20 +374,17 @@ class MainWindow(wx.Frame):
         Saves the current GUI settings to the config (but not to disk)
         after detect what side of hex is going to save
         """
-        servo_right_selection = self.servo_right_box.GetSelection()
-        servo_name = self.servo_list[servo_right_selection]
+        servo_name = self.servo_right_box.GetStringSelection()
         if len(servo_name) == 0:
             raise + oRuntimeError('No Servo Right Name')
         self.save_by_location(self.RBR_ADDR,servo_name);
             
-        servo_left_selection = self.servo_left_box.GetSelection()
-        servo_name = self.servo_list[servo_left_selection]
+        servo_name = self.servo_left_box.GetStringSelection()
         if len(servo_name) == 0:
             raise + oRuntimeError('No Servo Left Name')
         self.save_by_location(self.RBL_ADDR,servo_name);
         
-        servo_head_selection = self.servo_head_box.GetSelection()
-        servo_name = self.servo_list[servo_head_selection]
+        servo_name = self.servo_head_box.GetStringSelection()
         if len(servo_name) == 0:
             raise + oRuntimeError('No Servo Head Name')
         self.save_by_location(self.RBH_ADDR,servo_name);        
@@ -468,11 +465,12 @@ class MainWindow(wx.Frame):
         for j in range(0,len(self.servo_list)):
             driver = self.drivers[self.cfg[self.servo_list[j]][0]]
             driver.setPWM(self.cfg[self.servo_list[j]][1], 0, 0)
-        self.logger.AppendText('Relax All\n')
+        self.logger.AppendText('All servos relaxed\n')
 
     def on_save(self, event):
         self.save_setting()
         self.cfg.dumps()
+        self.logger.AppendText("Current seting(s) of screen saved\n")
 
 # Gather our code in a main() function
 def main(args, loglevel):
