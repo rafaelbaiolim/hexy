@@ -14,6 +14,7 @@ class MainWindow(wx.Frame):
     def __init__(self, parent, title):
         width = 600
         height = 630
+        self.auto_test = True;
         
         # A "-1" in the size parameter instructs wxWidgets to use the default size.
         # In this case, we select 200px width and the default height.
@@ -179,7 +180,7 @@ class MainWindow(wx.Frame):
                                      label='Center')
         self.test_max = wx.Button(self, pos=(x_offset+150, y_offset), size=(60, 25), id=self.BTR_MAX,
                                   label='Max')
-        self.test_relax = wx.Button(self, pos=(x_offset+225, y_offset), size=(60, 25), id=self.BTR_RELAX,
+        self.test_relax = wx.Button(self, pos=(x_offset+223, y_offset), size=(60, 25), id=self.BTR_RELAX,
                                   label='Relax')
         y_offset += 70
         self.Bind(wx.EVT_BUTTON,self.on_test_min, self.test_min)
@@ -241,7 +242,7 @@ class MainWindow(wx.Frame):
                                      label='Center')
         self.test_max = wx.Button(self, pos=(x_offset+150, y_offset), size=(60, 25), id=self.BTL_MAX,
                                   label='Max')
-        self.test_relax = wx.Button(self, pos=(x_offset+225, y_offset), size=(60, 25), id=self.BTL_RELAX,
+        self.test_relax = wx.Button(self, pos=(x_offset+223, y_offset), size=(60, 25), id=self.BTL_RELAX,
                                   label='Relax')
         y_offset += 70
         self.Bind(wx.EVT_BUTTON,self.on_test_min, self.test_min)
@@ -322,10 +323,16 @@ class MainWindow(wx.Frame):
                                   label='Relax All')
         self.relax_all.SetBackgroundColour((0,191,255)) 
         self.relax_all.SetForegroundColour(wx.Colour(34,35,38)) 
-
         self.Bind(wx.EVT_BUTTON, self.on_relax_all, self.relax_all)
 
-        self.save = wx.Button(self, pos=(320, y_offset), size=(70, 25),
+        self.auto_mode = wx.Button(self, pos=(320, y_offset), size=(90, 25),
+                                  label='Auto Mode')
+        self.auto_mode.SetBackgroundColour((255,165,0)) 
+        self.auto_mode.SetForegroundColour(wx.Colour(34,35,38)) 
+
+        self.Bind(wx.EVT_BUTTON, self.on_auto_mode, self.auto_mode)
+
+        self.save = wx.Button(self, pos=(420, y_offset), size=(70, 25),
                                   label='Save')
         self.save.SetBackgroundColour((70,160,73))
         self.save.SetForegroundColour(wx.Colour(34, 35, 38))
@@ -426,10 +433,18 @@ class MainWindow(wx.Frame):
     def on_channel_select(self, event):
         self.logger.AppendText('Channel Select: %s\n' % event.GetString())
 
+    def on_auto_mode(self, event):
+        self.auto_test = not self.auto_test
+        self.logger.AppendText('Auto Test Mode is ' + ("Enabled" if self.auto_test else "Disabled") + '\n')
+
     def on_min_change(self, event):
+        if self.auto_test:
+                self.on_test_min(event) 
         pass
     
     def on_max_change(self, event):
+        if self.auto_test:
+                self.on_test_max(event)
         pass
 
     def on_test_min(self, event):
