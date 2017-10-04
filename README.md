@@ -67,8 +67,8 @@ And this :)
 ```
 Configuration & Calibration V2
 ------------------------------
-V2 config. & calibration tool has the same 
-way of execution of V1. Just execute GUI V2 using: 
+V2 has the same idea and execution of V1 tool.
+Execute GUI V2 using: 
 ```
 python scripts/v2/detect_controllers.py
 ```
@@ -79,7 +79,8 @@ each area has one Controller and Channel.
 > VNC session will need to be setted with a resolution 
 of  at least 1024x768, increase GPU memory 
 for better process result too. 
-Use Raspberry Pi doc. to apply appropried value.
+Use Raspberry Pi doc. to apply appropried value. 
+[Raspberry Memory Configuration](https://www.raspberrypi.org/documentation/configuration/config-txt/memory.md)
 
 ![alt text](https://raw.githubusercontent.com/rafaelbaiolim/hexy/config/scripts/v2/screen/servo-tester_v2.png)
 
