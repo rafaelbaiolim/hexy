@@ -67,8 +67,8 @@ And this :)
 ```
 Configuration & Calibration V2
 ------------------------------
-For use V2 of config. & calibration tool,
-do as description V1. Execute GUI V2 using: 
+V2 config. & calibration tool has the same 
+way of execution of V1. Just execute GUI V2 using: 
 ```
 python scripts/v2/detect_controllers.py
 ```
