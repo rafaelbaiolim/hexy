@@ -14,7 +14,7 @@ class MainWindow(wx.Frame):
     def __init__(self, parent, title):
         width = 600
         height = 630
-        self.auto_test = True;
+        self.auto_test = False;
         
         # A "-1" in the size parameter instructs wxWidgets to use the default size.
         # In this case, we select 200px width and the default height.
