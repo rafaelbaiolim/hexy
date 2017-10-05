@@ -45,7 +45,7 @@ class MainWindow(wx.Frame):
 
         #.:TESTS BUTTONS HEAD
         self.BTH_MIN = 12;
-        self.BTH_LMAX = 13;
+        self.BTH_MAX = 13;
         self.BTH_CENTER = 14;
 
         #.:TESTS BUTTONS LEFT
@@ -174,7 +174,7 @@ class MainWindow(wx.Frame):
         self.Bind(wx.EVT_SCROLL, self.on_max_change, self.max_right_slider)
         y_offset += 30
         # Test Buttons RIGHT
-        self.test_min = wx.Button(self, pos=(x_offset, y_offset), size=(60, 25), id=self.BTR_CENTER,
+        self.test_min = wx.Button(self, pos=(x_offset, y_offset), size=(60, 25), id=self.BTR_MIN,
                                   label='Min')
         self.test_center = wx.Button(self, pos=(x_offset+70, y_offset), size=(70, 25),id=self.BTR_CENTER,
                                      label='Center')
@@ -303,10 +303,10 @@ class MainWindow(wx.Frame):
         self.test_center = wx.Button(self, pos=(65, y_offset), size=(50, 25),id=self.BTH_CENTER,
                                      label='Center')
         self.test_center.SetFont(wx.Font(8, wx.SWISS, wx.NORMAL, wx.NORMAL))
-        self.test_max = wx.Button(self, pos=(59*2, y_offset), size=(50, 25), id=self.BTH_LMAX,
+        self.test_max = wx.Button(self, pos=(59*2, y_offset), size=(50, 25), id=self.BTH_MAX,
                                   label='Max')
         self.test_max.SetFont(wx.Font(8, wx.SWISS, wx.NORMAL, wx.NORMAL))
-        self.test_relax = wx.Button(self, pos=(57*3, y_offset), size=(50, 25), id=self.BTL_RELAX,
+        self.test_relax = wx.Button(self, pos=(57*3, y_offset), size=(50, 25), id=self.BTH_RELAX,
                                   label='Relax')
         self.test_relax.SetFont(wx.Font(8, wx.SWISS, wx.NORMAL, wx.NORMAL))
 
